@@ -1,6 +1,18 @@
-import http from "http";
-import requestHandler from "./routes";
+import bodyParser from "body-parser";
+import express from "express";
+import adminRouter from "./routes/admin";
+import shopRouter from "./routes/shop";
 
-const server = http.createServer(requestHandler);
+const app = express();
 
-server.listen(3000);
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use("/admin",adminRouter);
+
+app.use(shopRouter);
+
+app.use((req, res, next) => {
+  res.status(404).send("<h1>Page not found!</h1>");
+});
+
+app.listen(3000);

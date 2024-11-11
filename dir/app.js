@@ -3,7 +3,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const http_1 = __importDefault(require("http"));
-const routes_1 = __importDefault(require("./routes"));
-const server = http_1.default.createServer(routes_1.default);
-server.listen(3000);
+const body_parser_1 = __importDefault(require("body-parser"));
+const express_1 = __importDefault(require("express"));
+const admin_1 = __importDefault(require("./routes/admin"));
+const shop_1 = __importDefault(require("./routes/shop"));
+const app = (0, express_1.default)();
+app.use(body_parser_1.default.urlencoded({ extended: false }));
+app.use("/admin", admin_1.default);
+app.use(shop_1.default);
+app.use((req, res, next) => {
+    res.status(404).send("<h1>Page not found!</h1>");
+});
+app.listen(3000);
