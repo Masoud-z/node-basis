@@ -5,11 +5,12 @@ import shopRouter from "./routes/shop";
 import path from "path";
 import rootDir from "./util/path";
 import testRouter from "./routes/test";
+import { notFoundPage } from "./controllers/notFound";
 
 const app = express();
 
-app.set('view engine', 'ejs');
-app.set('views', 'views');
+app.set("view engine", "ejs");
+app.set("views", "views");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(rootDir, "public")));
@@ -20,8 +21,6 @@ app.use("/test", testRouter);
 
 app.use(shopRouter);
 
-app.use((req, res, next) => {
-  res.status(404).render('404', { pageTitle: 'Page Not Found' });
-});
+app.use(notFoundPage);
 
 app.listen(3000);
