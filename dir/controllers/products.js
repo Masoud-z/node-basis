@@ -1,7 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProducts = exports.postAddProduct = exports.getAddProduct = exports.products = void 0;
-exports.products = [];
+exports.getProducts = exports.postAddProduct = exports.getAddProduct = void 0;
+const product_1 = __importDefault(require("../models/product"));
 function getAddProduct(req, res, next) {
     res.render("add-product", {
         pageTitle: "Add Product",
@@ -13,18 +16,21 @@ function getAddProduct(req, res, next) {
 }
 exports.getAddProduct = getAddProduct;
 function postAddProduct(req, res, next) {
-    exports.products.push({ title: req.body.title });
+    const product = new product_1.default(req.body.title);
+    product.save();
     res.redirect("/");
 }
 exports.postAddProduct = postAddProduct;
 function getProducts(req, res, next) {
-    res.render("shop", {
-        prods: exports.products,
-        pageTitle: "Shop",
-        path: "/",
-        hasProducts: exports.products.length > 0,
-        activeShop: true,
-        productCSS: true,
+    const products = product_1.default.fetchAll((products) => {
+        res.render("shop", {
+            prods: products,
+            pageTitle: "Shop",
+            path: "/",
+            hasProducts: products.length > 0,
+            activeShop: true,
+            productCSS: true,
+        });
     });
 }
 exports.getProducts = getProducts;
