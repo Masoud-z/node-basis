@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getProducts = exports.postAddProduct = exports.getAddProduct = void 0;
 const product_1 = __importDefault(require("../models/product"));
 function getAddProduct(req, res, next) {
-    res.render("add-product", {
+    res.render("admin/add-product", {
         pageTitle: "admin/Add Product",
         path: "/admin/add-product",
         formsCSS: true,
@@ -23,13 +23,10 @@ function postAddProduct(req, res, next) {
 exports.postAddProduct = postAddProduct;
 function getProducts(req, res, next) {
     const products = product_1.default.fetchAll((products) => {
-        res.render("shop/product0list", {
+        res.render("admin/products", {
             prods: products,
-            pageTitle: "Shop",
-            path: "/",
-            hasProducts: products.length > 0,
-            activeShop: true,
-            productCSS: true,
+            pageTitle: "Admin Products",
+            path: "/admin/products",
         });
     });
 }
