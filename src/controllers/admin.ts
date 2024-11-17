@@ -17,18 +17,22 @@ export function postAddProduct(
   res: Response,
   next: NextFunction
 ) {
-  const product = new Product(req.body.title);
+  const title = req.body.title;
+  const description = req.body.description;
+  const imageUrl = req.body.imageUrl;
+  const price = req.body.price;
+
+  const product = new Product(title, imageUrl,description, price);
   product.save();
   res.redirect("/");
 }
 
 export function getProducts(req: Request, res: Response, next: NextFunction) {
-    const products = Product.fetchAll((products) => {
-      res.render("admin/products", {
-        prods: products,
-        pageTitle: "Admin Products",
-        path: "/admin/products",
-      });
+  const products = Product.fetchAll((products) => {
+    res.render("admin/products", {
+      prods: products,
+      pageTitle: "Admin Products",
+      path: "/admin/products",
     });
-  }
-
+  });
+}

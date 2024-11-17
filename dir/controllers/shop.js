@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCheckout = exports.getCart = exports.getIndex = exports.getProducts = void 0;
+exports.getCheckout = exports.getOrders = exports.getCart = exports.getIndex = exports.getProducts = void 0;
 const product_1 = __importDefault(require("../models/product"));
 function getProducts(req, res, next) {
     const products = product_1.default.fetchAll((products) => {
@@ -32,6 +32,13 @@ function getCart(req, res, next) {
     });
 }
 exports.getCart = getCart;
+function getOrders(req, res, next) {
+    res.render("shop/orders", {
+        pageTitle: "Your Orders",
+        path: "/orders",
+    });
+}
+exports.getOrders = getOrders;
 function getCheckout(req, res, next) {
     res.render("shop/checkout", {
         pageTitle: "Checkout",

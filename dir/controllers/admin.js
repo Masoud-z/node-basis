@@ -16,7 +16,11 @@ function getAddProduct(req, res, next) {
 }
 exports.getAddProduct = getAddProduct;
 function postAddProduct(req, res, next) {
-    const product = new product_1.default(req.body.title);
+    const title = req.body.title;
+    const description = req.body.description;
+    const imageUrl = req.body.imageUrl;
+    const price = req.body.price;
+    const product = new product_1.default(title, imageUrl, description, price);
     product.save();
     res.redirect("/");
 }

@@ -11,10 +11,12 @@ function getProductFromFile(cb: (products: ProductDto[]) => void) {
 }
 
 export default class Product implements ProductDto {
-  title: string;
-  constructor(title: string) {
-    this.title = title;
-  }
+  constructor(
+    public title: string,
+    public imageUrl: string,
+    public description: string,
+    public price: string
+  ) {}
 
   save() {
     getProductFromFile((products) => {
