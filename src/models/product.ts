@@ -3,6 +3,7 @@ import path from "path";
 import { ProductDto } from "../dto/ProductDto";
 import rootDir from "../util/path";
 const p = path.join(rootDir, "data", "products.json");
+
 function getProductFromFile(cb: (products: ProductDto[]) => void) {
   fs.readFile(p, (err, fileContent) => {
     if (err) return cb([]);
@@ -11,6 +12,7 @@ function getProductFromFile(cb: (products: ProductDto[]) => void) {
 }
 
 export default class Product implements ProductDto {
+  id!: string;
   constructor(
     public title: string,
     public imageUrl: string,
@@ -19,6 +21,10 @@ export default class Product implements ProductDto {
   ) {}
 
   save() {
+    this.id = (
+      (Math.random() * Math.random()) /
+      (Math.random() * Math.random() * 10000)
+    ).toString();
     getProductFromFile((products) => {
       let newProducts: ProductDto[] = products;
       newProducts.push(this);
@@ -30,5 +36,12 @@ export default class Product implements ProductDto {
 
   static fetchAll(cb: (products: ProductDto[]) => void) {
     getProductFromFile(cb);
+  }
+
+  static getProductById(id: string, cb: (product?: ProductDto) => void) {
+    getProductFromFile((products) => {
+      const product = products.find((product) => product.id === id);
+      cb(product);
+    });
   }
 }
