@@ -6,11 +6,15 @@ import path from "path";
 import rootDir from "./util/path";
 import testRouter from "./routes/test";
 import { notFoundPage } from "./controllers/notFound";
+import pool from "./util/database";
 
 const app = express();
 
 app.set("view engine", "ejs");
 app.set("views", "views");
+
+const db = pool;
+db.execute("SELECT * FROM products");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(rootDir, "public")));
