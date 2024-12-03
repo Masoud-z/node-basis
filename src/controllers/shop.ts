@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import Product from "../models/product";
 import { GetProductParams } from "../dto/ProductDto";
+import Cart from "../models/cart";
 
 export function getProducts(req: Request, res: Response, next: NextFunction) {
   const products = Product.fetchAll((products) => {
@@ -13,12 +14,11 @@ export function getProducts(req: Request, res: Response, next: NextFunction) {
 }
 
 export function getProduct(
-  req: Request<any, any, any, GetProductParams>,
+  req: Request<GetProductParams>,
   res: Response,
   next: NextFunction
 ) {
-  console.log(req.query.productId);
-  Product.getProductById(req.query.productId, (product) => {
+  Product.findById(req.params.productId, (product) => {
     res.render("shop/product-detail", {
       product,
       pageTitle: product?.title,
@@ -38,9 +38,23 @@ export function getIndex(req: Request, res: Response, next: NextFunction) {
 }
 
 export function getCart(req: Request, res: Response, next: NextFunction) {
-  res.render("shop/cart", {
-    pageTitle: "Your Cart",
-    path: "/cart",
+  Cart.getCart((cart) => {
+    Product.fetchAll((products) => {
+      const cartProducts = [];
+      for (let product of products) {
+        const cartProductData = cart.products.find(
+          (prod) => prod.id === product.id
+        );
+        if (cartProductData) {
+          cartProducts.push({ productData: product, qty: cartProductData.qty });
+        }
+      }
+      res.render("shop/cart", {
+        path: "/cart",
+        pageTitle: "Your Cart",
+        products: cartProducts,
+      });
+    });
   });
 }
 
@@ -49,7 +63,25 @@ export function postCart(
   res: Response,
   next: NextFunction
 ) {
-  req.body.productId;
+  Product.findById(req.body.productId, (product) => {
+    if (product) {
+      Cart.addProduct(req.body.productId, product.price);
+      res.redirect("/cart");
+    }
+  });
+}
+
+export function postCartDeleteProduct(
+  req: Request<any, any, GetProductParams>,
+  res: Response,
+  next: NextFunction
+) {
+  Product.findById(req.body.productId, (product) => {
+    if (product) {
+      Cart.deleteProduct(req.body.productId, product.price);
+      res.redirect("/cart");
+    }
+  });
 }
 
 export function getOrders(req: Request, res: Response, next: NextFunction) {

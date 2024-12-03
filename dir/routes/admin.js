@@ -9,4 +9,7 @@ const adminRouter = express_1.default.Router();
 adminRouter.get("/add-product", admin_1.getAddProduct);
 adminRouter.post("/add-product", admin_1.postAddProduct);
 adminRouter.get("/products", admin_1.getProducts);
+adminRouter.get("/edit-product/:productId", admin_1.getEditProduct);
+adminRouter.post("/edit-product", admin_1.postEditProduct);
+adminRouter.post("/delete-product", admin_1.postDeleteProduct);
 exports.default = adminRouter;

@@ -1,14 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import { ProductDto } from "../dto/ProductDto";
+import { GetProductParams, ProductDto } from "../dto/ProductDto";
 import Product from "../models/product";
 
 export function getAddProduct(req: Request, res: Response, next: NextFunction) {
-  res.render("admin/add-product", {
+  res.render("admin/edit-product", {
     pageTitle: "admin/Add Product",
     path: "/admin/add-product",
-    formsCSS: true,
-    productCSS: true,
-    activeAddProduct: true,
+    editing: false,
   });
 }
 
@@ -22,9 +20,59 @@ export function postAddProduct(
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
 
-  const product = new Product(title, imageUrl,description, price);
+  const product = new Product(title, imageUrl, description, price);
   product.save();
   res.redirect("/");
+}
+
+export function getEditProduct(
+  req: Request<GetProductParams, any, any, { edit: "true" | "false" }>,
+  res: Response,
+  next: NextFunction
+) {
+  const editMode = req.query.edit;
+  if (!editMode) return res.redirect("/");
+  const prodId = req.params.productId;
+  Product.findById(prodId, (product) => {
+    if (!product) return res.redirect("/");
+    res.render("admin/edit-product", {
+      pageTitle: "Edit Product",
+      path: "/admin/edit-product",
+      editing: editMode,
+      product: product,
+    });
+  });
+}
+
+export function postEditProduct(
+  req: Request<any, any, ProductDto>,
+  res: Response,
+  next: NextFunction
+) {
+  const prodId = req.body.id;
+  const updatedTitle = req.body.title;
+  const updatedPrice = req.body.price;
+  const updatedImageUrl = req.body.imageUrl;
+  const updatedDesc = req.body.description;
+  const updatedProduct = new Product(
+    updatedTitle,
+    updatedImageUrl,
+    updatedDesc,
+    updatedPrice,
+    prodId
+  );
+  updatedProduct.save();
+  res.redirect("/admin/products");
+}
+
+export function postDeleteProduct(
+  req: Request<any, any, GetProductParams>,
+  res: Response,
+  next: NextFunction
+) {
+  const prodId = req.body.productId;
+  Product.deleteById(prodId);
+  res.redirect("/admin/products");
 }
 
 export function getProducts(req: Request, res: Response, next: NextFunction) {
