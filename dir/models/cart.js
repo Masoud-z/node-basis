@@ -41,13 +41,13 @@ class Cart {
     static deleteProduct(id, productPrice) {
         getCartsFromFile((cart) => {
             const product = cart.products.find((product) => product.id === id);
-            if (product) {
-                cart.products = cart.products.filter((product) => product.id !== id);
-                cart.totalPrice -= +productPrice * product.qty;
-                fs_1.default.writeFile(p, JSON.stringify(cart), (err) => {
-                    console.log(err);
-                });
-            }
+            if (!product)
+                return;
+            cart.products = cart.products.filter((product) => product.id !== id);
+            cart.totalPrice -= +productPrice * product.qty;
+            fs_1.default.writeFile(p, JSON.stringify(cart), (err) => {
+                console.log(err);
+            });
         });
     }
     static getCart(cb) {

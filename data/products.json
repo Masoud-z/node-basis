@@ -1,16 +1,1 @@
-[
-  {
-    "title": "test",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Public_Image_Ltd._live_27_10_2013_photo_1.JPG/450px-Public_Image_Ltd._live_27_10_2013_photo_1.JPG",
-    "description": "dfgqergergqerth",
-    "price": "343453",
-    "id": "3324418326315269.5"
-  },
-  {
-    "title": "test cart",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Public_Image_Ltd._live_27_10_2013_photo_1.JPG/450px-Public_Image_Ltd._live_27_10_2013_photo_1.JPG",
-    "description": "dfgwrthrth",
-    "price": "56",
-    "id": "280138634204065630"
-  }
-]
+[{"title":"test cart","imageUrl":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Public_Image_Ltd._live_27_10_2013_photo_1.JPG/450px-Public_Image_Ltd._live_27_10_2013_photo_1.JPG","description":"dfgwrthrth","price":"56","id":"280138634204065630"}]

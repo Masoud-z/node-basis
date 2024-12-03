@@ -62,7 +62,7 @@ export default class Product implements ProductDto {
       const product = products.find((product) => product.id === id);
       const updatedProducts = products.filter((product) => product.id !== id);
       if (product) {
-        // Cart.deleteProduct(product.id, product.price);
+        Cart.deleteProduct(product.id, product.price);
         fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
           console.log(err);
         });

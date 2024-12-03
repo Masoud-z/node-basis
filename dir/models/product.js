@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const path_2 = __importDefault(require("../util/path"));
+const cart_1 = __importDefault(require("./cart"));
 const p = path_1.default.join(path_2.default, "data", "products.json");
 function getProductFromFile(cb) {
     fs_1.default.readFile(p, (err, fileContent) => {
@@ -56,7 +57,7 @@ class Product {
             const product = products.find((product) => product.id === id);
             const updatedProducts = products.filter((product) => product.id !== id);
             if (product) {
-                // Cart.deleteProduct(product.id, product.price);
+                cart_1.default.deleteProduct(product.id, product.price);
                 fs_1.default.writeFile(p, JSON.stringify(updatedProducts), (err) => {
                     console.log(err);
                 });

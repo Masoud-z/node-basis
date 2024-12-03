@@ -42,14 +42,13 @@ export default class Cart {
   static deleteProduct(id: string, productPrice: string) {
     getCartsFromFile((cart) => {
       const product = cart.products.find((product) => product.id === id);
-      if (product) {
-        cart.products = cart.products.filter((product) => product.id !== id);
-        cart.totalPrice -= +productPrice * product.qty;
+      if (!product) return;
+      cart.products = cart.products.filter((product) => product.id !== id);
+      cart.totalPrice -= +productPrice * product.qty;
 
-        fs.writeFile(p, JSON.stringify(cart), (err) => {
-          console.log(err);
-        });
-      }
+      fs.writeFile(p, JSON.stringify(cart), (err) => {
+        console.log(err);
+      });
     });
   }
   static getCart(cb: (cart: CartDto) => void) {
