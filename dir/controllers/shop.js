@@ -7,32 +7,40 @@ exports.getCheckout = exports.getOrders = exports.postCartDeleteProduct = export
 const product_1 = __importDefault(require("../models/product"));
 const cart_1 = __importDefault(require("../models/cart"));
 function getProducts(req, res, next) {
-    const products = product_1.default.fetchAll((products) => {
+    product_1.default.fetchAll()
+        .then(([productRows, fieldDate]) => {
         res.render("shop/product-list", {
-            prods: products,
+            prods: productRows,
             pageTitle: "All products",
             path: "/products",
         });
+    })
+        .catch((err) => {
+        console.log(err);
     });
 }
 exports.getProducts = getProducts;
 function getProduct(req, res, next) {
-    product_1.default.findById(req.params.productId, (product) => {
+    product_1.default.findById(req.params.productId).then(([product, fieldDate]) => {
         res.render("shop/product-detail", {
-            product,
-            pageTitle: product === null || product === void 0 ? void 0 : product.title,
+            product: product[0],
+            pageTitle: product[0].title,
             path: "/products",
         });
     });
 }
 exports.getProduct = getProduct;
 function getIndex(req, res, next) {
-    const products = product_1.default.fetchAll((products) => {
+    product_1.default.fetchAll()
+        .then(([productRows, fieldDate]) => {
         res.render("shop/index", {
-            prods: products,
+            prods: productRows,
             pageTitle: "Shop",
             path: "/",
         });
+    })
+        .catch((err) => {
+        console.log(err);
     });
 }
 exports.getIndex = getIndex;

@@ -19,8 +19,14 @@ function postAddProduct(req, res, next) {
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
     const product = new product_1.default(title, imageUrl, description, price);
-    product.save();
-    res.redirect("/");
+    product
+        .save()
+        .then(() => {
+        res.redirect("/");
+    })
+        .catch((err) => {
+        console.log(err);
+    });
 }
 exports.postAddProduct = postAddProduct;
 function getEditProduct(req, res, next) {

@@ -4,13 +4,17 @@ import { GetProductParams } from "../dto/ProductDto";
 import Cart from "../models/cart";
 
 export function getProducts(req: Request, res: Response, next: NextFunction) {
-  const products = Product.fetchAll((products) => {
-    res.render("shop/product-list", {
-      prods: products,
-      pageTitle: "All products",
-      path: "/products",
+  Product.fetchAll()
+    .then(([productRows, fieldDate]) => {
+      res.render("shop/product-list", {
+        prods: productRows,
+        pageTitle: "All products",
+        path: "/products",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 }
 
 export function getProduct(
@@ -18,23 +22,27 @@ export function getProduct(
   res: Response,
   next: NextFunction
 ) {
-  Product.findById(req.params.productId, (product) => {
+  Product.findById(req.params.productId).then(([product, fieldDate]) => {
     res.render("shop/product-detail", {
-      product,
-      pageTitle: product?.title,
+      product: product[0],
+      pageTitle: product[0].title,
       path: "/products",
     });
   });
 }
 
 export function getIndex(req: Request, res: Response, next: NextFunction) {
-  const products = Product.fetchAll((products) => {
-    res.render("shop/index", {
-      prods: products,
-      pageTitle: "Shop",
-      path: "/",
+  Product.fetchAll()
+    .then(([productRows, fieldDate]) => {
+      res.render("shop/index", {
+        prods: productRows,
+        pageTitle: "Shop",
+        path: "/",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 }
 
 export function getCart(req: Request, res: Response, next: NextFunction) {
