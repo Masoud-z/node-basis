@@ -4,8 +4,8 @@ import adminRouter from "./routes/admin";
 import shopRouter from "./routes/shop";
 import path from "path";
 import rootDir from "./util/path";
-import testRouter from "./routes/test";
 import { notFoundPage } from "./controllers/notFound";
+import sequelize from "./util/database";
 
 const app = express();
 
@@ -17,10 +17,17 @@ app.use(express.static(path.join(rootDir, "public")));
 
 app.use("/admin", adminRouter);
 
-app.use("/test", testRouter);
-
 app.use(shopRouter);
 
 app.use(notFoundPage);
+
+sequelize
+  .sync()
+  .then((result) => {
+    console.log("Database connected");
+  })
+  .catch((err) => {
+    console.log("error: ", err);
+  });
 
 app.listen(3000);

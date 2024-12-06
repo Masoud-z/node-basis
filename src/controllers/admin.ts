@@ -20,11 +20,9 @@ export function postAddProduct(
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
 
-  const product = new Product(title, imageUrl, description, price);
-  product
-    .save()
-    .then(() => {
-      res.redirect("/");
+  Product.create({ title, description, imageUrl, price })
+    .then((result) => {
+      console.log(result);
     })
     .catch((err) => {
       console.log(err);
@@ -39,15 +37,19 @@ export function getEditProduct(
   const editMode = req.query.edit;
   if (!editMode) return res.redirect("/");
   const prodId = req.params.productId;
-  Product.findById(prodId, (product) => {
-    if (!product) return res.redirect("/");
-    res.render("admin/edit-product", {
-      pageTitle: "Edit Product",
-      path: "/admin/edit-product",
-      editing: editMode,
-      product: product,
+  Product.findByPk(prodId)
+    .then((product) => {
+      if (!product) return res.redirect("/");
+      res.render("admin/edit-product", {
+        pageTitle: "Edit Product",
+        path: "/admin/edit-product",
+        editing: editMode,
+        product: product,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 }
 
 export function postEditProduct(
@@ -82,7 +84,7 @@ export function postDeleteProduct(
 }
 
 export function getProducts(req: Request, res: Response, next: NextFunction) {
-  const products = Product.fetchAll((products) => {
+  Product.findAll().then((products) => {
     res.render("admin/products", {
       prods: products,
       pageTitle: "Admin Products",

@@ -1,33 +1,27 @@
-import { QueryResult } from "mysql2";
+import { DataTypes, Model } from "sequelize";
+import sequelize from "../util/database";
 import { ProductDto } from "../dto/ProductDto";
-import db from "../util/database";
 
-export default class Product implements ProductDto {
-  constructor(
-    public title: string,
-    public imageUrl: string,
-    public description: string,
-    public price: string,
-    public id: string = ""
-  ) {}
+const Product = sequelize.define<Model<any> & ProductDto>("product", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+  },
+  title: { type: DataTypes.STRING, allowNull: false },
+  price: {
+    type: DataTypes.DOUBLE,
+    allowNull: false,
+  },
+  imageUrl: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  description: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+});
 
-  save() {
-    return db.execute(
-      "INSERT INTO products (title, price, imageUrl, description) VALUES (?, ?, ?, ?)",
-      [this.title, this.price, this.imageUrl, this.description]
-    );
-  }
-
-  static fetchAll() {
-    return db.execute("SELECT * FROM products");
-  }
-
-  static findById(id: string) {
-    return db.execute<[ProductDto] & QueryResult>(
-      "SELECT * FROM products WHERE products.id = ?",
-      [id]
-    );
-  }
-
-  static deleteById(id: string) {}
-}
+export default Product;

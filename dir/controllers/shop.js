@@ -7,10 +7,10 @@ exports.getCheckout = exports.getOrders = exports.postCartDeleteProduct = export
 const product_1 = __importDefault(require("../models/product"));
 const cart_1 = __importDefault(require("../models/cart"));
 function getProducts(req, res, next) {
-    product_1.default.fetchAll()
-        .then(([productRows, fieldDate]) => {
+    product_1.default.findAll()
+        .then((products) => {
         res.render("shop/product-list", {
-            prods: productRows,
+            prods: products,
             pageTitle: "All products",
             path: "/products",
         });
@@ -21,20 +21,22 @@ function getProducts(req, res, next) {
 }
 exports.getProducts = getProducts;
 function getProduct(req, res, next) {
-    product_1.default.findById(req.params.productId).then(([product, fieldDate]) => {
-        res.render("shop/product-detail", {
-            product: product[0],
-            pageTitle: product[0].title,
-            path: "/products",
-        });
+    product_1.default.findOne({ where: { id: req.params.productId } }).then((product) => {
+        if (product) {
+            res.render("shop/product-detail", {
+                product: product,
+                pageTitle: product.title,
+                path: "/products",
+            });
+        }
     });
 }
 exports.getProduct = getProduct;
 function getIndex(req, res, next) {
-    product_1.default.fetchAll()
-        .then(([productRows, fieldDate]) => {
+    product_1.default.findAll()
+        .then((products) => {
         res.render("shop/index", {
-            prods: productRows,
+            prods: products,
             pageTitle: "Shop",
             path: "/",
         });

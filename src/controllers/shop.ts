@@ -4,10 +4,10 @@ import { GetProductParams } from "../dto/ProductDto";
 import Cart from "../models/cart";
 
 export function getProducts(req: Request, res: Response, next: NextFunction) {
-  Product.fetchAll()
-    .then(([productRows, fieldDate]) => {
+  Product.findAll()
+    .then((products) => {
       res.render("shop/product-list", {
-        prods: productRows,
+        prods: products,
         pageTitle: "All products",
         path: "/products",
       });
@@ -22,20 +22,23 @@ export function getProduct(
   res: Response,
   next: NextFunction
 ) {
-  Product.findById(req.params.productId).then(([product, fieldDate]) => {
-    res.render("shop/product-detail", {
-      product: product[0],
-      pageTitle: product[0].title,
-      path: "/products",
-    });
-  });
+  Product.findOne({ where: { id: req.params.productId } }).then(
+    (product) => {
+      if(product) {
+        res.render("shop/product-detail", {
+          product: product,
+          pageTitle: product.title,
+          path: "/products",
+        });
+  );
+  
 }
 
 export function getIndex(req: Request, res: Response, next: NextFunction) {
-  Product.fetchAll()
-    .then(([productRows, fieldDate]) => {
+  Product.findAll()
+    .then((products) => {
       res.render("shop/index", {
-        prods: productRows,
+        prods: products,
         pageTitle: "Shop",
         path: "/",
       });
