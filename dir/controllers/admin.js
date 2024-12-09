@@ -21,6 +21,7 @@ function postAddProduct(req, res, next) {
     product_1.default.create({ title, description, imageUrl, price })
         .then((result) => {
         console.log(result);
+        res.redirect("/admin/products");
     })
         .catch((err) => {
         console.log(err);
@@ -54,15 +55,38 @@ function postEditProduct(req, res, next) {
     const updatedPrice = req.body.price;
     const updatedImageUrl = req.body.imageUrl;
     const updatedDesc = req.body.description;
-    const updatedProduct = new product_1.default(updatedTitle, updatedImageUrl, updatedDesc, updatedPrice, prodId);
-    updatedProduct.save();
-    res.redirect("/admin/products");
+    product_1.default.findByPk(prodId)
+        .then((product) => {
+        if (!product)
+            return res.redirect("/");
+        product.title = updatedTitle;
+        product.price = updatedPrice;
+        product.imageUrl = updatedImageUrl;
+        product.description = updatedDesc;
+        product.save().then((result) => {
+            console.log("UPDATED PRODUCT!");
+            res.redirect("/admin/products");
+        });
+    })
+        .catch((err) => {
+        console.log(err);
+    });
 }
 exports.postEditProduct = postEditProduct;
 function postDeleteProduct(req, res, next) {
     const prodId = req.body.productId;
-    product_1.default.deleteById(prodId);
-    res.redirect("/admin/products");
+    product_1.default.findByPk(prodId)
+        .then((product) => {
+        if (!product)
+            return res.redirect("/admin/products");
+        product.destroy().then((result) => {
+            console.log("DESTROYED PRODUCT");
+            res.redirect("/admin/products");
+        });
+    })
+        .catch((err) => {
+        console.log(err);
+    });
 }
 exports.postDeleteProduct = postDeleteProduct;
 function getProducts(req, res, next) {
