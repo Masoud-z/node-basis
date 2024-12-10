@@ -6,6 +6,17 @@ import path from "path";
 import rootDir from "./util/path";
 import { notFoundPage } from "./controllers/notFound";
 import sequelize from "./util/database";
+import Product from "./models/product";
+import User from "./models/user";
+import { UserDto } from "./dto/user.dto";
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: UserDto;
+    }
+  }
+}
 
 const app = express();
 
@@ -14,6 +25,16 @@ app.set("views", "views");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(rootDir, "public")));
+app.use((req, res, next) => {
+  User.findAll()
+    .then((users) => {
+      req.user = users?.[0];
+      next();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 
 app.use("/admin", adminRouter);
 
@@ -21,13 +42,27 @@ app.use(shopRouter);
 
 app.use(notFoundPage);
 
+Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+User.hasMany(Product);
+
 sequelize
   .sync()
   .then((result) => {
     console.log("Database connected");
+    return User.findAll().then((users) => {
+      return users?.[0];
+    });
+  })
+  .then((user) => {
+    if (!user) {
+      return User.create({ name: "Masoud", email: "test@test.com" });
+    }
+    return user;
+  })
+  .then((user) => {
+    console.log(user);
+    app.listen(3000);
   })
   .catch((err) => {
     console.log("error: ", err);
   });
-
-app.listen(3000);
