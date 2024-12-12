@@ -2,7 +2,7 @@ import { DataTypes, Model } from "sequelize";
 import sequelize from "../util/database";
 import { ProductDto } from "../dto/ProductDto";
 
-const Product = sequelize.define<Model<any> & ProductDto>("product", {
+const Product = sequelize.define<Model<ProductDto> & ProductDto>("product", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,

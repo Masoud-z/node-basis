@@ -1,8 +1,8 @@
-import { UserDto } from "./../dto/user.dto.d";
-import { DataTypes, Model } from "sequelize";
+import { UserInstance } from "../dto/user.dto";
+import { DataTypes } from "sequelize";
 import sequelize from "../util/database";
 
-const User = sequelize.define<Model & UserDto>("user", {
+const User = sequelize.define<UserInstance>("user", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,

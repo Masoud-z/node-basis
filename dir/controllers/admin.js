@@ -17,8 +17,9 @@ function postAddProduct(req, res, next) {
     const title = req.body.title;
     const description = req.body.description;
     const imageUrl = req.body.imageUrl;
-    const price = req.body.price;
-    product_1.default.create({ title, description, imageUrl, price })
+    const price = +req.body.price;
+    req.user
+        .createProduct({ title, description, imageUrl, price })
         .then((result) => {
         console.log(result);
         res.redirect("/admin/products");
@@ -33,8 +34,10 @@ function getEditProduct(req, res, next) {
     if (!editMode)
         return res.redirect("/");
     const prodId = req.params.productId;
-    product_1.default.findByPk(prodId)
-        .then((product) => {
+    req.user
+        .getProducts({ where: { id: prodId } })
+        .then((products) => {
+        const product = products[0];
         if (!product)
             return res.redirect("/");
         res.render("admin/edit-product", {
@@ -90,7 +93,7 @@ function postDeleteProduct(req, res, next) {
 }
 exports.postDeleteProduct = postDeleteProduct;
 function getProducts(req, res, next) {
-    product_1.default.findAll().then((products) => {
+    req.user.getProducts().then((products) => {
         res.render("admin/products", {
             prods: products,
             pageTitle: "Admin Products",

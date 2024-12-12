@@ -8,12 +8,12 @@ import { notFoundPage } from "./controllers/notFound";
 import sequelize from "./util/database";
 import Product from "./models/product";
 import User from "./models/user";
-import { UserDto } from "./dto/user.dto";
+import { UserInstance } from "./dto/user.dto";
 
 declare global {
   namespace Express {
     interface Request {
-      user?: UserDto;
+      user: UserInstance;
     }
   }
 }
