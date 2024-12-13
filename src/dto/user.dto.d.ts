@@ -1,3 +1,4 @@
+import { CartInstance } from "./cartDto.d";
 import {
   HasManyAddAssociationMixin,
   HasManyAddAssociationsMixin,
@@ -9,9 +10,9 @@ import {
   HasManyRemoveAssociationMixin,
   HasManyRemoveAssociationsMixin,
   HasManySetAssociationsMixin,
+  HasOneGetAssociationMixin,
   Model,
 } from "sequelize";
-import { ProductDto } from "./ProductDto";
 
 export interface UserDto {
   id: number;
@@ -30,4 +31,16 @@ export interface UserInstance extends Model, UserDto {
   hasProducts: HasManyHasAssociationsMixin<ProductDto, number>;
   countProducts: HasManyCountAssociationsMixin;
   createProduct: HasManyCreateAssociationMixin<Model & ProductDto, "userId">;
+
+  //Cart
+  getCart: HasOneGetAssociationMixin<CartInstance>;
+  addCart: HasManyAddAssociationMixin<CartInstance, number>;
+  addCarts: HasManyAddAssociationsMixin<CartInstance, number>;
+  setCarts: HasManySetAssociationsMixin<CartInstance, number>;
+  removeCart: HasManyRemoveAssociationMixin<CartInstance, number>;
+  removeCarts: HasManyRemoveAssociationsMixin<CartInstance, number>;
+  hasCart: HasManyHasAssociationMixin<CartInstance, number>;
+  hasCarts: HasManyHasAssociationsMixin<CartInstance, number>;
+  countCarts: HasManyCountAssociationsMixin;
+  createCart: HasManyCreateAssociationMixin<Model & CartInstance, "userId">;
 }
