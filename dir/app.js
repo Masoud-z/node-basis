@@ -13,6 +13,8 @@ const notFound_1 = require("./controllers/notFound");
 const database_1 = __importDefault(require("./util/database"));
 const product_1 = __importDefault(require("./models/product"));
 const user_1 = __importDefault(require("./models/user"));
+const cart_1 = __importDefault(require("./models/cart"));
+const cartItem_1 = __importDefault(require("./models/cartItem"));
 const app = (0, express_1.default)();
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -33,9 +35,13 @@ app.use(shop_1.default);
 app.use(notFound_1.notFoundPage);
 product_1.default.belongsTo(user_1.default, { constraints: true, onDelete: "CASCADE" });
 user_1.default.hasMany(product_1.default);
+user_1.default.hasOne(cart_1.default);
+cart_1.default.belongsTo(user_1.default);
+cart_1.default.belongsToMany(product_1.default, { through: cartItem_1.default });
+product_1.default.belongsToMany(cart_1.default, { through: cartItem_1.default });
 database_1.default
     .sync()
-    .then((result) => {
+    .then(() => {
     console.log("Database connected");
     return user_1.default.findAll().then((users) => {
         return users === null || users === void 0 ? void 0 : users[0];

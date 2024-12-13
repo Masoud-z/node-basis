@@ -9,6 +9,8 @@ import sequelize from "./util/database";
 import Product from "./models/product";
 import User from "./models/user";
 import { UserInstance } from "./dto/user.dto";
+import Cart from "./models/cart";
+import CartItem from "./models/cartItem";
 
 declare global {
   namespace Express {
@@ -44,10 +46,14 @@ app.use(notFoundPage);
 
 Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 User.hasMany(Product);
+User.hasOne(Cart);
+Cart.belongsTo(User);
+Cart.belongsToMany(Product, { through: CartItem });
+Product.belongsToMany(Cart, { through: CartItem });
 
 sequelize
   .sync()
-  .then((result) => {
+  .then(() => {
     console.log("Database connected");
     return User.findAll().then((users) => {
       return users?.[0];
