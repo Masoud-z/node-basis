@@ -20,7 +20,8 @@ export interface UserDto {
   email: string;
 }
 
-export interface UserInstance extends Model, UserDto {
+export interface UserInstance
+  extends Model<InferAttributes<UserDto>, InferCreationAttributes<UserDto>> {
   getProducts: HasManyGetAssociationsMixin<ProductDto>;
   addProduct: HasManyAddAssociationMixin<ProductDto, number>;
   addProducts: HasManyAddAssociationsMixin<ProductDto, number>;

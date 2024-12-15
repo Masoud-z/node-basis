@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import Product from "../models/product";
 import { GetProductParams } from "../dto/ProductDto";
 import { CartInstance } from "../dto/cartDto";
-import { HasManyAddAssociationMixinOptions } from "sequelize";
 
 export function getProducts(req: Request, res: Response, next: NextFunction) {
   Product.findAll()

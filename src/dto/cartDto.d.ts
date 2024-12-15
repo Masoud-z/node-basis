@@ -1,12 +1,14 @@
 import { ProductDto } from "./ProductDto.d";
 import {
-  HasManyGetAssociationsMixin,
-  HasManyAddAssociationMixin,
-  HasManyAddAssociationsMixin,
-  HasManySetAssociationsMixin,
-  HasManyRemoveAssociationMixin,
-  HasManyRemoveAssociationsMixin,
   Model,
+  BelongsToManyAddAssociationMixin,
+  BelongsToManySetAssociationsMixin,
+  BelongsToManyGetAssociationsMixin,
+  BelongsToManyRemoveAssociationMixin,
+  BelongsToManyRemoveAssociationMixinOptions,
+  BelongsToManyRemoveAssociationsMixin,
+  BelongsToManyRemoveAssociationsMixinOptions,
+  BelongsToManyAddAssociationsMixin,
 } from "sequelize";
 
 export interface CartDto {
@@ -14,11 +16,14 @@ export interface CartDto {
   totalPrice: number;
 }
 
-export interface CartInstance extends Model, CartDto {
-  getProducts: HasManyGetAssociationsMixin<ProductDto>;
-  addProduct: HasManyAddAssociationMixin<ProductDto, number>;
-  addProducts: HasManyAddAssociationsMixin<ProductDto, number>;
-  setProducts: HasManySetAssociationsMixin<ProductDto, number>;
-  removeProduct: HasManyRemoveAssociationMixin<ProductDto, number>;
-  removeProducts: HasManyRemoveAssociationsMixin<ProductDto, number>;
+export interface CartInstance
+  extends Model<InferAttributes<CartDto>, InferCreationAttributes<CartDto>> {
+  getProducts: BelongsToManyGetAssociationsMixin<ProductDto>;
+  addProduct: BelongsToManyAddAssociationMixin<ProductDto, number>;
+  addProducts: BelongsToManyAddAssociationsMixin<ProductDto, number>;
+  setProducts: BelongsToManySetAssociationsMixin<ProductDto, number>;
+  removeProduct: BelongsToManyRemoveAssociationMixin<ProductDto, number>;
+  removeProducts: BelongsToManyRemoveAssociationsMixin<ProductDto, number>;
 }
+
+
